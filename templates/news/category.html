@@ -1,0 +1,76 @@
+{% extends 'news/base.html' %}
+
+{% block title %}
+    Категория: {{ category }}
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-4">
+        <h3>Категории:</h3>
+        <div class="list-group sticky-top">
+            <a href="{% url 'index' %}" class="list-group-item list-group-item-action bg-danger bg-gradient text-light"
+               aria-current="true">
+                Все категории
+            </a>
+            {% load news_tags %}
+            {% get_categories as categories %}
+            {% for item in categories %}
+                {#                Example of using function in view from templatetags#}
+                {#                {% load news_extras %}#}
+                {#                {% with "/cat/"|addstr:item.pk as template %}#}
+                {#                    <a href="{{ item.pk }}"#}
+                {#                       class="list-group-item list-group-item-action {% if request.path == template %}#}
+                {#                            active#}
+                {#                        {% endif %}" aria-current="true">#}
+                {#                        {{ item.title }}#}
+                {#                    </a>#}
+                {#                {% endwith %}#}
+                {% with item.get_absolute_url as cat_url %}
+                    <a href="{{ item.pk }}"
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center
+                        {% if request.path == cat_url %}
+                            active
+                        {% endif %}"
+                       aria-current="true">
+                        {{ item.title }} <span class="badge rounded-pill bg-primary
+                        {% if request.path == cat_url %}
+                            bg-danger
+                        {% endif %}
+                        ">{{ item.cnt }}</span>
+                    </a>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h5>Всего новостей: {{ all_news_category }}</h5>
+
+        {% include 'news/inc/_pagination.html' %}
+
+        {% for item in news %}
+            <div class="card mb-3">
+                <div class="card-header text-white {% cycle 'bg-primary' 'bg-danger' %} bg-gradient">
+                    Категория: {{ item.category_id }}
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <img src="{{ item.photo.url }}" alt="" width="350px" class="rounded mr-3">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <p class="card-text">{{ item.content|safe|linebreaks|truncatewords:50 }}</p>
+                            <p><em>{{ item.created_at|date:'d.m.Y H:i:s' }}</em></p>
+                            <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Читать</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <h2 class="alert alert-info">Извините :( Мы не смогли ничего найти</h2>
+        {% endfor %}
+
+        {% include 'news/inc/_pagination.html' %}
+
+    </div>
+{% endblock %}

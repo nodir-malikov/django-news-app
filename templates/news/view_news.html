@@ -1,0 +1,36 @@
+{% extends 'news/base.html' %}
+
+{% block title %}{{ news_item.title }}{% endblock %}
+{% block content %}
+    <div class="col-md-8">
+        <div class="card mb-5">
+            <div class="card-header">
+                <h1>{{ news_item.title }}</h1>
+                <a href="{{ news_item.category_id.get_absolute_url }}" class="tag">{{ news_item.category_id }}</a>
+            </div>
+            <div class="card-body">
+                <img src="{{ news_item.photo.url }}" alt="" class="rounded mr-3 mt-5 mb-5 img-fluid">
+                <p>{{ news_item.content|safe|linebreaks }}</p>
+                <br>
+            </div>
+            <div class="card-footer">
+                <p><em>{{ news_item.created_at|date:'d.m.Y H:i:s' }}</em></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="list-group">
+            {% load news_tags %}
+            {% get_categories as categories %}
+            <h3>Последние новости:</h3>
+            {% for item in all_news %}
+                <a href="{{ item.get_absolute_url }}" class="list-group-item list-group-item-action"
+                   aria-current="true">
+                    <b>{{ item.title }}</b>
+                    <p>{{ item.content|safe|truncatewords:10 }}</p>
+                </a>
+            {% endfor %}
+            <a class="btn btn-primary mt-3" href="{% url 'index' %}">Больше новостей <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'news/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <div class="col-md-8">
+        <h1>
+            {{ title }}
+        </h1>
+        <form method="post">
+            {% csrf_token %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="alert alert-danger">{{ message }}</div>
+                    {% else %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {{ form.as_p }}
+            <button type="button" class='captcha btn btn-primary'>Обновить Captcha</button>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </div>
+        </form>
+
+    </div>
+    <script>
+        $('.captcha').click(function () {
+            $.getJSON("/captcha/refresh/", function (result) {
+                $('.captcha').attr('src', result['image_url']);
+                $('#id_captcha_0').val(result['key'])
+            });
+        });
+    </script>
+{% endblock %}

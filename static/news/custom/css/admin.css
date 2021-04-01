@@ -1,0 +1,31 @@
+#header {
+    background-color: #4a148c !important;
+}
+
+caption {
+    background-color: #6a1b9a !important;
+}
+
+.breadcrumbs {
+    background-color: #6a1b9a !important;
+}
+
+.module h2, h3 {
+    color: #fff !important;
+    background-color: #6a1b9a !important;
+}
+
+.addlink:hover {
+    color: #fff;
+    background-color: #6a1b9a !important;
+}
+
+.submit-row input {
+    transition-duration: .2s;
+    background-color: #6a1b9a !important;
+}
+
+.submit-row input:hover {
+    transition-duration: .2s;
+    background-color: #8537b4 !important;
+}

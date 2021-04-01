@@ -1,0 +1,54 @@
+{% extends 'news/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="col-md-8">
+        <h1>
+            {{ title }}
+        </h1>
+
+        <br>
+
+        <form action="{% url 'add_news' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {#            {% for field in form %}#}
+            {#                <div class="form-group mb-3">#}
+            {#                    {{ field.label_tag }}#}
+            {#                    {{ field }}#}
+            {#                    <div class="invalid-feedback alert alert-warning">#}
+            {#                        {{ field.errors }}#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            {% endfor %}#}
+
+            {{ form.as_p }}
+
+            {#            {% if error %}#}
+            {#                <div class="alert alert-warning">{{ error }}</div>#}
+            {#            {% endif %}#}
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-block">Добавить новость</button>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="col-md-4">
+        <div class="list-group">
+            {% load news_tags %}
+            {% get_categories as categories %}
+            <h3>Последние новости:</h3>
+            {% for item in all_news %}
+                <a href="{{ item.get_absolute_url }}" class="list-group-item list-group-item-action"
+                   aria-current="true">
+                    <b>{{ item.title }}</b>
+                    <p>{{ item.content|safe|truncatewords:10 }}</p>
+                </a>
+            {% endfor %}
+            <a class="btn btn-primary mt-3" href="{% url 'index' %}">Больше новостей <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+{% endblock %}
